@@ -35,5 +35,6 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://yurangja99.github.io/first_react_app/"
+  "homepage": "https://yurangja99.github.io/first_react_app/",
+  "proxy": "http://localhost:8080"
 }
