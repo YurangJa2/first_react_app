@@ -1,21 +1,24 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 
-function App() {
-  const [message, setMessage] = useState("");
-  // useEffect: 기존의 componentDidMount, componentDidUpdate, componentWillUnmount가 합쳐진 것으로 생각해도 된다.
-  useEffect(() => {
+class App extends React.Component {
+  state = {
+    message: "default message"
+  };
+  componentDidMount() {
     fetch('/api/hello').then(response => response.text())
                        .then(message => {
-                         setMessage(message);
+                         this.setState({message});
                        });
-  }, [])
-
-  return (
-    <div>
-      <h1>Hello React!</h1>
-      <h2>{message}</h2>
-    </div>  
-  );
+  }
+  render(){
+    console.log(this.state.message);
+    return (
+      <div>
+        <h1>Hello React!</h1>
+        <h2>{this.state.message}</h2>
+      </div>  
+    );
+  }
 }
 
 export default App;
