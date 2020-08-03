@@ -1,4 +1,5 @@
 import React from 'react';
+import Recorder from './Recorder';
 //import 'codemirror/lib/codemirror.css';
 //import '@toast-ui/editor/dist/toastui-editor.css';
 
@@ -11,41 +12,16 @@ import React from 'react';
 
 class App extends React.Component {
   state = {
-    script: document.createElement("script"),
-    show: true
+    show: false,
+    recorderRef: React.createRef()
   };
-
-  componentDidMount () {
-    const {script} = this.state;
-    script.type = "text/javascript";
-    script.innerText = `
-    console.log("NamSaeng's Camera!");
-    var pipeParams = {size:{width:640,height:390}, qualityurl:"avq/720p.xml", accountHash:"e8a9098088c1db348ae13b82a06941cc", eid:"M1zM10", mrt:60, dup:1};
-    PipeSDK.insert("custom-id",pipeParams,function(recorderObject){
-      recorderObject.onUploadDone = function(recorderId, streamName, streamDuration, audioCodec, videoCodec, fileType, audioOnly, location){
-        var args = Array.prototype.slice.call(arguments);
-        console.log("onUploadDone("+args.join(', ')+")");
-        alert("https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + streamName);
-      },
-      recorderObject.onDesktopVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
-        var args = Array.prototype.slice.call(arguments);
-        console.log("onDesktopVideoUploadSuccess("+args.join(', ')+")");
-        alert("https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + "." + filetype);
-      }
-    });
-    `;
-    document.body.appendChild(script);
-  }
 
   onChangeShow = () => {
-    const {show, script} = this.state;
-    this.setState({show: !show}, () => setTimeout(() => document.body.appendChild(script), 1000));
-  }
-
-  onRemoveScript = () => {
-    document.body.removeChild(this.state.script);
+    const {show} = this.state;
+    this.setState({show: !show});
   };
-/*
+
+  /*
   editorRef = React.createRef();
 
   handleClick = () => {
@@ -57,15 +33,21 @@ class App extends React.Component {
   };*/
 
   render(){
-    const {show} = this.state;
-    console.log("render");
+    const {show, recorderRef} = this.state;
+    console.log(recorderRef.current);
     return (
-      <div>
+      <div 
+        id="app_container"
+        style={{
+          display: "flex", 
+          flexDirection: "column", 
+          alignItems: "flex-start"
+        }}>
         <h1>비디오 테스트</h1>
-        <input type="button" value="영상 켜기/끄기" onClick={this.onChangeShow}/>
-        <input type="button" value="스크립트 지우기" onClick={this.onRemoveScript}/>
+        <span>영상 링크: {localStorage.getItem("video")}</span>
+        <input type="button" value={show ? "입력 완료" : "영상으로 입력"} onClick={this.onChangeShow}/>
         {show ? (
-          <div id="custom-id" style={{backgroundColor: "green", width: 640, height: 480}} />
+          <Recorder ref={recorderRef} />
         ) : <h3>Off</h3>}
       </div>
     );
