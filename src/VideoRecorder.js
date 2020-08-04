@@ -6,7 +6,7 @@ class VideoRecorder extends React.Component {
     script.type = "text/javascript";
     script.innerText = `
     console.log("NamSaeng's Camera!");
-    var pipeParams = {size:{width:640,height:390}, qualityurl:"avq/720p.xml", accountHash:"e8a9098088c1db348ae13b82a06941cc", eid:"M1zM10", mrt:60};
+    var pipeParams = {size:{width:640,height:390}, qualityurl:"avq/720p.xml", accountHash:"e8a9098088c1db348ae13b82a06941cc", eid:"M1zM10", mrt:60, asv:0};
     PipeSDK.insert("custom-id",pipeParams,function(recorderObject){
       recorderObject.onUploadDone = function(recorderId, streamName, streamDuration, audioCodec, videoCodec, fileType, audioOnly, location){
         var args = Array.prototype.slice.call(arguments);
