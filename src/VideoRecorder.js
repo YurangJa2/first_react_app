@@ -12,19 +12,13 @@ class VideoRecorder extends React.Component {
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading done " + arguments);
         localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + streamName + ".jpg");
-        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + streamName + ".mp4");
-      },
-      recorderObject.onDesktopVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
-        var args = Array.prototype.slice.call(arguments);
-        console.log("uploading done " + arguments);
-        localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".jpg");
-        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".mp4");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + streamName + "_raw." + fileType);
       },
       recorderObject.onVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading mobile done " + arguments);
         localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".jpg");
-        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".mp4");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + "_raw." + filetype);
       }
     });
     `;
