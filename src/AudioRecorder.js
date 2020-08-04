@@ -12,19 +12,19 @@ class AudioRecorder extends React.Component {
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading done " + arguments);
         localStorage.removeItem("thumb");
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + streamName + ".mp4");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + streamName + ".mp4");
       },
       recorderObject.onDesktopVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading done " + arguments);
         localStorage.removeItem("thumb");
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + ".mp4");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".mp4");
       },
       recorderObject.onVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading mobile done " + arguments);
         localStorage.removeItem("thumb");
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + ".mp4");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".mp4");
       }
     });
     `;

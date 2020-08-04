@@ -11,20 +11,20 @@ class VideoRecorder extends React.Component {
       recorderObject.onUploadDone = function(recorderId, streamName, streamDuration, audioCodec, videoCodec, fileType, audioOnly, location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading done " + arguments);
-        localStorage.setItem("thumb", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + streamName + ".jpg");
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + streamName + ".mp4");
+        localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + streamName + ".jpg");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + streamName + ".mp4");
       },
       recorderObject.onDesktopVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading done " + arguments);
-        localStorage.setItem("thumb", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + ".jpg");
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + ".mp4");
+        localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".jpg");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".mp4");
       },
       recorderObject.onVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading mobile done " + arguments);
-        localStorage.setItem("thumb", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + ".jpg");
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + ".mp4");
+        localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".jpg");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".mp4");
       }
     });
     `;

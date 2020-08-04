@@ -7,6 +7,7 @@ import VideoRecorder from './VideoRecorder';
 //import { Editor } from '@toast-ui/react-editor';
 import { Player } from 'video-react';
 import "video-react/dist/video-react.css";
+import Axios from 'axios';
 
 //import "https://cdn.addpipe.com/2.0/pipe.js";
 //import "https://cdn.addpipe.com/2.0/pipe.css";
@@ -24,7 +25,15 @@ class App extends React.Component {
   };
 
   onHide = () => {
-    this.setState({show: false, audioOnly: null});
+    const video = localStorage.getItem("video");
+    if (video !== null) {
+      // 비디오 URL이 유효해질 때까지 버틴다.
+      Axios.get(video).then(response => {
+        this.setState({show: false, audioOnly: null});
+      }).catch(e => alert("아직 업로드 중입니다. 잠시만 기다려주세요."));
+    } else {
+      this.setState({show: false, audioOnly: null});
+    }
   }
 
   onClick = v => {
@@ -64,6 +73,7 @@ class App extends React.Component {
             src={video}
           />
         ) : <span>업로드된된 비디오 없음</span>}
+        <p>미디어 파일 URL: {video}</p>
         {show && audioOnly !== null ? (
           <input type="button" value="입력 완료" onClick={this.onHide}/>
         ) : null}
