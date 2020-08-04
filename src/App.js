@@ -1,5 +1,6 @@
 import React from 'react';
-import Recorder from './Recorder';
+import AudioRecorder from './AudioRecorder';
+import VideoRecorder from './VideoRecorder';
 //import 'codemirror/lib/codemirror.css';
 //import '@toast-ui/editor/dist/toastui-editor.css';
 
@@ -13,13 +14,22 @@ import Recorder from './Recorder';
 class App extends React.Component {
   state = {
     show: false,
-    recorderRef: React.createRef()
+    audioOnly: null
   };
 
-  onChangeShow = () => {
-    const {show} = this.state;
-    this.setState({show: !show});
+  onShow = () => {
+    localStorage.removeItem("thumb");
+    localStorage.removeItem("video");
+    this.setState({show: true});
   };
+
+  onHide = () => {
+    this.setState({show: false, audioOnly: null});
+  }
+
+  onClick = v => {
+    this.setState({audioOnly: v});
+  }
 
   /*
   editorRef = React.createRef();
@@ -33,8 +43,11 @@ class App extends React.Component {
   };*/
 
   render(){
-    const {show, recorderRef} = this.state;
-    console.log(recorderRef.current);
+    const {show, audioOnly} = this.state;
+    // 음성 혹은 영상으로 입력하기 버튼을 누르면 show가 true가 된다.
+    // 하지만 audioOnly가 null이라면 음성과 영상 둘 중 선택하라는 메시지가 뜬다.
+    // show와 audioOnly가 둘 다 null이 아닌 boolean이라면, audioOnly의 값에 따라 음성/영상 레코더가 뜬다.
+    // 입력 완료 버튼을 누르면 show는 false가 되고, audioOnly는 null이 된다.
     return (
       <div 
         id="app_container"
@@ -44,10 +57,31 @@ class App extends React.Component {
           alignItems: "flex-start"
         }}>
         <h1>비디오 테스트</h1>
+        <span>썸네일 링크: {localStorage.getItem("thumb")}</span>
         <span>영상 링크: {localStorage.getItem("video")}</span>
-        <input type="button" value={show ? "입력 완료" : "영상으로 입력"} onClick={this.onChangeShow}/>
+        {show && audioOnly !== null ? (
+          <input type="button" value="입력 완료" onClick={this.onHide}/>
+        ) : null}
+        {!show && !audioOnly ? (
+          <input type="button" value="음성 혹은 영상으로 입력하기" onClick={this.onShow} />
+        ) : null}
         {show ? (
-          <Recorder ref={recorderRef} />
+          <>
+          {audioOnly === null ? (
+            <>
+            <input type="button" value="음성 입력" onClick={() => this.onClick(true)} />
+            <input type="button" value="영상 입력" onClick={() => this.onClick(false)} />
+            </>
+          ) : (
+            <>
+            {audioOnly === true ? (
+              <AudioRecorder />
+            ) : (
+              <VideoRecorder />
+            )}
+            </>
+          )}
+          </>
         ) : <h3>Off</h3>}
       </div>
     );

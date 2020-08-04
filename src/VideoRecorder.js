@@ -1,6 +1,6 @@
 import React from "react";
 
-class Recorder extends React.Component {
+class VideoRecorder extends React.Component {
   componentDidMount () {
     const script = document.createElement("script");
     script.type = "text/javascript";
@@ -11,20 +11,20 @@ class Recorder extends React.Component {
       recorderObject.onUploadDone = function(recorderId, streamName, streamDuration, audioCodec, videoCodec, fileType, audioOnly, location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading done " + arguments);
-        alert("https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + streamName + ".mp4");
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + streamName + ".mp4");
+        localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + streamName + ".jpg");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + streamName + "_raw." + fileType);
       },
       recorderObject.onDesktopVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading done " + arguments);
-        alert("https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + "." + filetype);
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + "." + filetype);
+        localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".jpg");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + "_raw." + filetype);
       },
       recorderObject.onVideoUploadSuccess = function(recorderId, filename,filetype,videoId,audioOnly,location){
         var args = Array.prototype.slice.call(arguments);
         console.log("uploading mobile done " + arguments);
-        alert("https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + "." + filetype);
-        localStorage.setItem("video", "https://eu1-addpipe.s3.eu-central-1.amazonaws.com/e8a9098088c1db348ae13b82a06941cc/" + filename + "." + filetype);
+        localStorage.setItem("thumb", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + ".jpg");
+        localStorage.setItem("video", "https://unicef-batoners.s3.ap-northeast-2.amazonaws.com/uploaded/" + filename + "_raw." + filetype);
       }
     });
     `;
@@ -38,4 +38,4 @@ class Recorder extends React.Component {
   }
 }
 
-export default Recorder;
+export default VideoRecorder;
