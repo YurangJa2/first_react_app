@@ -4,6 +4,6 @@ export const config = {
   getNativeBlob: false,
   ignoreMutedMedia: false,
   initCallback: null,
-  mimeType: "video/webm",
+  mimeType: "video/mp4",
   type: "video"
 };
