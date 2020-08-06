@@ -24,30 +24,41 @@ class Recorder extends React.Component {
   onClickDisplay = () => {
     const {audioOnly} = this.props;
     const setState = config => this.setState(config);
-    // 마이크와 영상 권한을 얻는다.
     this.setState({initial: false});
+    // 마이크와 영상 권한을 얻는다.
+    if (navigator.mediaDevices === null || navigator.mediaDevices === undefined ){
+      alert("이 브라우저는 실시간 녹음 또는 녹화가 지원되지 않습니다. 다른 브라우저를 이용하거나 파일 업로드 기능을 이용해 주세요.");
+      setState({initial: true});
+      return;
+    }
     navigator.mediaDevices.getUserMedia(
       audioOnly ? { audio: true } : { video: true, audio: true }
     ).then(async function(stream){
+      console.log("Got Medias");
       setState({stream, recording: false});
       const video = document.getElementById("video");
       video.srcObject = stream;
       video.muted = true;
       video.play();
     }).catch(e => {
-      alert("이 브라우저는 실시간 녹음 또는 녹화가 지원되지 않습니다. 다른 브라우저를 이용하거나 파일 업로드 기능을 이용해 주세요.");
+      alert("오류가 발생했습니다. 다른 브라우저를 이용하거나 파일 업로드 기능을 이용해 주세요.");
       setState({initial: true});
     }); 
   };
 
   onClickStart = () => {
-    const {stream} = this.state;
-    let recorder = RecordRTC(stream, {
+    const {stream, audioOnly} = this.state;
+    let recorder = RecordRTC(stream, audioOnly ? ({
+      mimeType: "audio/webm",
+      type: "audio",
+      timeSlice: 1000
+    }) : ({
       mimeType: "video/webm;codecs=vp8",
       type: "video",
       timeSlice: 1000
-    });
+    }));
     recorder.startRecording();
+    console.log("Started Recording");
 
     const getState = () => this.state;
     const setState = config => this.setState(config);
@@ -71,6 +82,7 @@ class Recorder extends React.Component {
     const setState = config => this.setState(config);
     const {stream, recorder} = this.state;
     recorder.stopRecording(function() {
+      console.log("Stopped Recording");
       const blob = recorder.getBlob();
       // 비디오 태그에 추가.
       const video = document.getElementById("video");
@@ -143,7 +155,7 @@ class Recorder extends React.Component {
             <button onClick={this.onClickFinish} >녹음 종료</button>
           ) : null}
           {initial === false && file !== null ? (
-            <a href={URL.createObjectURL(file)} download="RecordRTC.webm">다운로드</a>
+            <a href={URL.createObjectURL(file)} download={audioOnly ? "audio.webm" : "video.webm"}>다운로드</a>
           ) : null}
           {initial === false ? (
             <button onClick={this.onClickReset} >처음부터</button>
