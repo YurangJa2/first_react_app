@@ -1,6 +1,5 @@
 import React from "react";
 import RecordRTC from 'recordrtc';
-import { config } from './config';
 
 class Recorder extends React.Component {
   state = {
@@ -8,8 +7,19 @@ class Recorder extends React.Component {
     stream: null,
     recorder: null,
     file: null,
-    recording: null
+    recording: null,
+    recordTime: ""
   };
+
+  calculateTimeDuration = secs => {
+    var hr = Math.floor(secs / 3600);
+    var min = Math.floor((secs - (hr * 3600)) / 60);
+    var sec = Math.floor(secs - (hr * 3600) - (min * 60));
+    if (min < 10) min = "0" + min;
+    if (sec < 10) sec = "0" + sec;
+    if(hr <= 0) return min + ':' + sec;
+    return hr + ':' + min + ':' + sec;
+  }
 
   onClickDisplay = () => {
     const {audioOnly} = this.props;
@@ -32,9 +42,29 @@ class Recorder extends React.Component {
 
   onClickStart = () => {
     const {stream} = this.state;
-    let recorder = RecordRTC(stream, config);
+    let recorder = RecordRTC(stream, {
+      mimeType: "video/webm;codecs=vp8",
+      type: "video",
+      timeSlice: 1000
+    });
     recorder.startRecording();
-    this.setState({recorder, recording: true});
+
+    const getState = () => this.state;
+    const setState = config => this.setState(config);
+    const duration = d => this.calculateTimeDuration(d);
+    const finish = () => this.onClickFinish();
+    
+    this.setState({recorder, recording: true}, () => {
+      // 녹화 시간 계산
+      const startTime = new Date().getTime();
+      (function looper() {
+        if (!getState().recorder) return;
+        const timeDuration = duration((new Date().getTime() - startTime) / 1000);
+        if (timeDuration === "00:10") finish();
+        setState({recordTime: timeDuration});
+        setTimeout(looper, 1000);
+      })();
+    });
   };
   
   onClickFinish = () => {
@@ -83,19 +113,18 @@ class Recorder extends React.Component {
   };
 
   render () {
-    const {initial, recording, file} = this.state;
+    const {initial, recording, file, recordTime} = this.state;
     const {audioOnly} = this.props;
-    console.log(this.state);
     return (
       <div style={{
-        width: 600, height: 520, 
+        width: 400, height: 320, 
         display: "flex", flexDirection: "column", 
         alignItems: "center", justifyContent: "space-between",
         padding: 20, backgroundColor: "#ddd"
       }}>
         {initial ? (
           <div style={{
-            width: 600, height: 400, display: "flex", flexDirection: "column", 
+            width: 400, height: 280, display: "flex", flexDirection: "column", 
             alignItems: "center", justifyContent: "center", backgroundColor: "white"}}>
             <button onClick={this.onClickDisplay} >실시간 {audioOnly ? "녹음" : "녹화"}</button>
             <input type="file" accept={audioOnly ? "audio/*" : "video/*"} onChange={this.onChangeFile} />
@@ -103,8 +132,9 @@ class Recorder extends React.Component {
             <span>녹음/녹화를 마치신 후 <b>확인</b> 버튼을 눌러주세요.</span>
           </div>
         ) : (
-          <video id="video" controls={recording !== false} width={600} height={480} style={{backgroundColor: "transparent"}} />
+          <video id="video" controls={recording === null} width={400} height={280} style={{backgroundColor: "transparent"}} />
         )}
+        <span>녹화 시간: {recordTime}(최대 00:10)</span>
         <div style={{display: "flex", flexDirection: "row"}}>
           {initial === false && recording === false? (
             <button onClick={this.onClickStart} >녹음 시작</button>
@@ -113,7 +143,7 @@ class Recorder extends React.Component {
             <button onClick={this.onClickFinish} >녹음 종료</button>
           ) : null}
           {initial === false && file !== null ? (
-            <a href={URL.createObjectURL(file)} download="RecordRTC.mp4">다운로드</a>
+            <a href={URL.createObjectURL(file)} download="RecordRTC.webm">다운로드</a>
           ) : null}
           {initial === false ? (
             <button onClick={this.onClickReset} >처음부터</button>
