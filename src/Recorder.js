@@ -27,27 +27,27 @@ class Recorder extends React.Component {
     this.setState({initial: false});
     // 마이크와 영상 권한을 얻는다.
     if (navigator.mediaDevices === null || navigator.mediaDevices === undefined ){
-      alert("이 브라우저는 실시간 녹음 또는 녹화가 지원되지 않습니다. 다른 브라우저를 이용하거나 파일 업로드 기능을 이용해 주세요.");
+      alert("이 브라우저는 실시간 녹음 또는 녹화가 지원되지 않습니다. 파일 업로드 기능을 이용해 주세요.");
       setState({initial: true});
       return;
     }
     navigator.mediaDevices.getUserMedia(
       audioOnly ? { audio: true } : { video: true, audio: true }
-    ).then(async function(stream){
+    ).then(function(stream){
       console.log("Got Medias");
       setState({stream, recording: false});
       const video = document.getElementById("video");
       video.srcObject = stream;
       video.muted = true;
-      video.play();
     }).catch(e => {
-      alert("오류가 발생했습니다. 다른 브라우저를 이용하거나 파일 업로드 기능을 이용해 주세요.");
+      alert("오류가 발생했습니다. 파일 업로드 기능을 이용해 주세요.");
       setState({initial: true});
     }); 
   };
 
   onClickStart = () => {
-    const {stream, audioOnly} = this.state;
+    const {audioOnly} = this.props;
+    const {stream} = this.state;
     let recorder = RecordRTC(stream, audioOnly ? ({
       mimeType: "audio/webm",
       type: "audio",
@@ -89,7 +89,7 @@ class Recorder extends React.Component {
       video.srcObject = null;
       video.src = URL.createObjectURL(blob);
       video.muted = false;
-      video.play();
+      console.log(URL.createObjectURL(blob));
 
 
       // 스트림과 레코더 폐기
@@ -129,7 +129,7 @@ class Recorder extends React.Component {
     const {audioOnly} = this.props;
     return (
       <div style={{
-        width: 400, height: 320, 
+        width: 400,
         display: "flex", flexDirection: "column", 
         alignItems: "center", justifyContent: "space-between",
         padding: 20, backgroundColor: "#ddd"
@@ -138,13 +138,17 @@ class Recorder extends React.Component {
           <div style={{
             width: 400, height: 280, display: "flex", flexDirection: "column", 
             alignItems: "center", justifyContent: "center", backgroundColor: "white"}}>
-            <button onClick={this.onClickDisplay} >실시간 {audioOnly ? "녹음" : "녹화"}</button>
+            <button onClick={this.onClickDisplay} >(데스크탑만!)실시간 {audioOnly ? "녹음" : "녹화"}</button>
             <input type="file" accept={audioOnly ? "audio/*" : "video/*"} onChange={this.onChangeFile} />
             <span>위 버튼을 누르면 <b>영상 촬영</b>을 할 수 있습니다.</span>
             <span>녹음/녹화를 마치신 후 <b>확인</b> 버튼을 눌러주세요.</span>
           </div>
         ) : (
-          <video id="video" controls={recording === null} width={400} height={280} style={{backgroundColor: "transparent"}} />
+          <video id="video"autoPlay controls={recording === null} width={400} height={audioOnly ? 50 : 280} style={{backgroundColor: "transparent"}} >
+            <source type="video/mp4" />
+            <source type="video/webm" />
+            Sorry, your browser doesn't support embedded videos.
+          </video>
         )}
         <span>녹화 시간: {recordTime}(최대 00:10)</span>
         <div style={{display: "flex", flexDirection: "row"}}>
